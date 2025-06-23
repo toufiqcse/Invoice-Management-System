@@ -34,10 +34,7 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
     showToast('Invoice printed successfully', 'success');
   };
 
-  // const handleDownload = () => {
-  //   showToast('Download functionality will be implemented', 'info');
-  // };
-
+  
   const subtotal = invoice.items.reduce((sum, item) => sum + item.amount, 0);
   //const tax = subtotal * 0.1; 
   const total = subtotal;
@@ -75,7 +72,7 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center">
                   <img 
-                    src="/public/Web Frik Hero Logo with light bg with main logo.png" 
+                    src="https://webfrik.com/wp-content/uploads/2024/10/Web-Frik-Hero-Logo-with-Dark-bg-with-main-logo-1-1.png" 
                     alt="Web Frik" 
                     className="h-12 w-auto mr-4"
                   />
