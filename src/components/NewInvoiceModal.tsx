@@ -12,11 +12,18 @@ import {
   Calendar
 } from 'lucide-react';
 import { InvoiceItem } from '../types';
+import { useCurrency } from '../context/CurrencyContext';
+import { currencyOptions, getCurrencySymbol } from '../utils/currency';
+
+
+
 
 interface NewInvoiceModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+
 
 export default function NewInvoiceModal({ isOpen, onClose }: NewInvoiceModalProps) {
   const { addInvoice, showToast, company } = useApp();
@@ -31,9 +38,17 @@ export default function NewInvoiceModal({ isOpen, onClose }: NewInvoiceModalProp
     status: 'pending' as const
   });
 
+  
+
+const {currency, setCurrency} =  useCurrency()
+console.log(currency);
+
+
   const [items, setItems] = useState<InvoiceItem[]>([
     { id: '1', description: '', quantity: 1, rate: 0, discount: 0, amount: 0 }
   ]);
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -426,7 +441,7 @@ export default function NewInvoiceModal({ isOpen, onClose }: NewInvoiceModalProp
                           Amount
                         </label>
                         <div className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-700">
-                          ${item.amount.toFixed(2)}
+                          {getCurrencySymbol(currency)} {item.amount.toFixed(2)}
                         </div>
                       </div>
                       
@@ -451,14 +466,35 @@ export default function NewInvoiceModal({ isOpen, onClose }: NewInvoiceModalProp
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium text-gray-700">Total Amount:</span>
                     <span className="text-lg font-bold text-blue-900">
-                      ${totalAmount.toFixed(2)}
+                    {getCurrencySymbol(currency)}
+                    {totalAmount.toFixed(2)}
                     </span>
                   </div>
                 </div>
               </div>
+              
+              <div className='flex justify-between items-center gap-x-7'>
+                  {/* Currency set */}
+              <div className="space-y-4 w-full">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1"> Select Currency</label>
+                  
+                  <select
+      value={currency}
+      onChange={(e) => setCurrency(e.target.value)}
+      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
+    >
+                    {currencyOptions.map((opt) => (
+                      <option key={opt.code} value={opt.code}>
+                       {opt.label}
+                      </option>
+                   ))}
+                  </select>
+                </div>
+              </div>
 
               {/* Payment Status */}
-              <div>
+              <div className='w-full'>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Payment Status
                 </label>
@@ -473,6 +509,9 @@ export default function NewInvoiceModal({ isOpen, onClose }: NewInvoiceModalProp
                   <option value="overdue">Overdue</option>
                 </select>
               </div>
+              </div>
+
+
             </form>
           </div>
 

@@ -11,6 +11,8 @@ import {
   Calendar
 } from 'lucide-react';
 import { Invoice, InvoiceItem } from '../types';
+import { currencyOptions, getCurrencySymbol } from '../utils/currency';
+import { useCurrency } from '../context/CurrencyContext';
 
 interface EditInvoiceModalProps {
   isOpen: boolean;
@@ -21,6 +23,7 @@ interface EditInvoiceModalProps {
 export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoiceModalProps) {
   const { updateInvoice, showToast } = useApp();
   const [isLoading, setIsLoading] = useState(false);
+  const {currency, setCurrency} =  useCurrency()
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -45,6 +48,8 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
     }
   }, [invoice]);
 
+ 
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -57,8 +62,8 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
     setItems(prev => prev.map(item => {
       if (item.id === id) {
         const updatedItem = { ...item, [field]: value };
-        if (field === 'quantity' || field === 'rate') {
-          updatedItem.amount = updatedItem.quantity * updatedItem.rate;
+        if (field === 'quantity' || field === 'rate' || field === 'discount') {
+          updatedItem.amount = updatedItem.quantity * updatedItem.rate - updatedItem.discount;
         }
         return updatedItem;
       }
@@ -72,6 +77,7 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
       description: '',
       quantity: 1,
       rate: 0,
+      discount: 0,
       amount: 0
     };
     setItems(prev => [...prev, newItem]);
@@ -111,6 +117,9 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
   };
 
   if (!isOpen || !invoice) return null;
+
+
+  
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -221,7 +230,8 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                 <div className="space-y-3">
                   {items.map((item) => (
                     <div key={item.id} className="grid grid-cols-12 gap-3 items-end p-3 bg-gray-50 rounded-lg">
-                      <div className="col-span-12 md:col-span-5">
+                     {/* Edit Invoice Description */}
+                      <div className="col-span-12 md:col-span-4">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                           Description
                         </label>
@@ -233,7 +243,8 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                           placeholder="Item description"
                         />
                       </div>
-                      <div className="col-span-4 md:col-span-2">
+                      {/* Edit invoice qty */}
+                      <div className="col-span-4 md:col-span-1">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                           Qty
                         </label>
@@ -245,6 +256,7 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                         />
                       </div>
+                      {/* Edit Invoice Rate */}
                       <div className="col-span-4 md:col-span-2">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                           Rate
@@ -258,14 +270,30 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                         />
                       </div>
+                      {/* Edit Invoice Discount */}
+                      <div className="col-span-4 md:col-span-2">
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Discount
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.discount}
+                          onChange={(e) => handleItemChange(item.id, 'discount', parseFloat(e.target.value) || 0)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        />
+                      </div>
+                      {/* Edit Invoice Amount */}
                       <div className="col-span-3 md:col-span-2">
                         <label className="block text-xs font-medium text-gray-700 mb-1">
                           Amount
                         </label>
                         <div className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-700">
-                          ${item.amount.toFixed(2)}
+                        <span className='text-xl text-gray-700'>{getCurrencySymbol(currency)}</span> {item.amount.toFixed(2)}
                         </div>
                       </div>
+                      {/* Invoice remove button */}
                       <div className="col-span-1">
                         {items.length > 1 && (
                           <button
@@ -285,14 +313,33 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium text-gray-700">Total Amount:</span>
                     <span className="text-lg font-bold text-blue-900">
-                      ${totalAmount.toFixed(2)}
+                    <span className='text-xl text-gray-700 font-bold'>{getCurrencySymbol(currency)}</span> {totalAmount.toFixed(2)}
                     </span>
                   </div>
                 </div>
               </div>
+                
+              <div className='flex flex-row  justify-between  gap-x-7 items-center'>
+                  {/* Currency set */}
+              <div className="space-y-4 w-full">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Select Currency</label>
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                {currencyOptions.map((opt) => (
+                  <option key={opt.code} value={opt.code}>
+                    {opt.label}
+                  </option>
+                ))}
+                  </select>
+                </div>
+            </div>
 
               {/* Payment Status */}
-              <div>
+              <div className='w-full'>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Payment Status
                 </label>
@@ -307,6 +354,9 @@ export default function EditInvoiceModal({ isOpen, onClose, invoice }: EditInvoi
                   <option value="overdue">Overdue</option>
                 </select>
               </div>
+              </div>
+              
+
             </form>
           </div>
 

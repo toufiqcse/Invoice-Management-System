@@ -2,6 +2,10 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { X, Printer, Download, User, Phone, Mail, Calendar } from 'lucide-react';
 import { Invoice } from '../types';
+import {getCurrencySymbol} from '../utils/currency'
+import { useCurrency } from '../context/CurrencyContext';
+
+
 
 interface ViewInvoiceModalProps {
   isOpen: boolean;
@@ -11,6 +15,8 @@ interface ViewInvoiceModalProps {
 
 export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoiceModalProps) {
   const { company, showToast } = useApp();
+
+  const {currency} = useCurrency()
 
   if (!isOpen || !invoice) return null;
 
@@ -72,7 +78,7 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center">
                   <img 
-                    src="https://webfrik.com/wp-content/uploads/2024/10/Web-Frik-Hero-Logo-with-Dark-bg-with-main-logo-1-1.png" 
+                    src="https://i.ibb.co/ns2fp8Dh/Web-Frik-Hero-Logo-with-light-bg-with-main-logo.png" 
                     alt="Web Frik" 
                     className="h-12 w-auto mr-4"
                   />
@@ -150,9 +156,9 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
                       <tr key={item.id} className="border-b border-gray-100">
                         <td className="py-3 text-gray-900">{item.description}</td>
                         <td className="py-3 text-center text-gray-600">{item.quantity}</td>
-                        <td className="py-3 text-right text-gray-600">{formatCurrency(item.rate)}</td>
-                        <td className="py-3 text-right text-gray-600">{formatCurrency(item.discount)}</td>
-                        <td className="py-3 text-right text-gray-900 font-medium">{formatCurrency(item.amount)}</td>
+                        <td className="py-3 text-right text-gray-600">{getCurrencySymbol(currency)} {(item.rate)}</td>
+                        <td className="py-3 text-right text-gray-600">{getCurrencySymbol(currency)} {(item.discount)}</td>
+                        <td className="py-3 text-right text-gray-900 font-medium">{getCurrencySymbol(currency)} {(item.amount)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -165,7 +171,7 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal:</span>
-                      <span className="text-gray-900">{formatCurrency(subtotal)}</span>
+                      <span className="text-gray-900">{getCurrencySymbol(currency)} {subtotal}</span>
                     </div>
                     {/* <div className="flex justify-between">
                       <span className="text-gray-600">Tax (10%):</span>
@@ -173,7 +179,7 @@ export default function ViewInvoiceModal({ isOpen, onClose, invoice }: ViewInvoi
                     </div> */}
                     <div className="flex justify-between border-t pt-2">
                       <span className="text-lg font-semibold text-gray-900">Total:</span>
-                      <span className="text-lg font-bold text-gray-900">{formatCurrency(total)}</span>
+                      <span className="text-lg font-bold text-gray-900">{getCurrencySymbol(currency)} {total}</span>
                     </div>
                   </div>
                 </div>

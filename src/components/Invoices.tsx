@@ -15,6 +15,8 @@ import {
 import ViewInvoiceModal from './ViewInvoiceModal';
 import EditInvoiceModal from './EditInvoiceModal';
 import { Invoice } from '../types';
+import { getCurrencySymbol } from '../utils/currency';
+import { useCurrency } from '../context/CurrencyContext';
 
 export default function Invoices() {
   const { invoices, updateInvoice, deleteInvoice, showToast } = useApp();
@@ -24,6 +26,9 @@ export default function Invoices() {
   const [viewInvoice, setViewInvoice] = useState<Invoice | null>(null);
   const [editInvoice, setEditInvoice] = useState<Invoice | null>(null);
   const itemsPerPage = 15;
+
+  const {currency} = useCurrency()
+
 
   const filteredInvoices = useMemo(() => {
     return invoices.filter(invoice => {
@@ -76,12 +81,12 @@ export default function Invoices() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
+  // const formatCurrency = (amount: number) => {
+  //   return new Intl.NumberFormat('en-US', {
+  //     style: 'currency',
+  //     currency: 'USD'
+  //   }).format(amount);
+  // };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -180,7 +185,8 @@ export default function Invoices() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{formatCurrency(invoice.amount)}</div>
+                      <div className="text-sm font-medium text-gray-900"> <span></span> 
+                      {invoice.amount}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select

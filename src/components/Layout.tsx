@@ -9,6 +9,7 @@ import {
   X,
   Plus
 } from 'lucide-react';
+import { getCurrencySymbol } from '../utils/currency';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -52,13 +53,13 @@ export default function Layout({ children, currentPage, onPageChange, onNewInvoi
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <div className="flex-shrink-0 flex items-center px-4">
                 <img 
-                  src="https://webfrik.com/wp-content/uploads/2024/10/Web-Frik-Hero-Logo-with-Dark-bg-with-main-logo-1-1.png" 
+                  src="https://i.ibb.co/ns2fp8Dh/Web-Frik-Hero-Logo-with-light-bg-with-main-logo.png" 
                   alt="Web Frik" 
                   className="h-8 w-auto"
                 />
                 <div className="ml-3">
-                  <span className="text-lg font-bold text-gray-900">Invoice Manager</span>
-                  <p className="text-xs text-gray-500">Professional Invoice Management</p>
+                  
+                  <p className="text-xs text-gray-500"> Invoice Management</p>
                 </div>
               </div>
               <nav className="mt-5 px-2 space-y-1">
@@ -103,7 +104,7 @@ export default function Layout({ children, currentPage, onPageChange, onNewInvoi
           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex  items-center flex-shrink-0 px-4">
               <img 
-                src="https://webfrik.com/wp-content/uploads/2024/10/Web-Frik-Hero-Logo-with-Dark-bg-with-main-logo-1-1.png" 
+                src="https://i.ibb.co/ns2fp8Dh/Web-Frik-Hero-Logo-with-light-bg-with-main-logo.png" 
                 alt="Web Frik" 
                 className="h-8 w-auto"
               />
@@ -188,7 +189,7 @@ export default function Layout({ children, currentPage, onPageChange, onNewInvoi
                     className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 flex items-center"
                   >
                     <Plus className="w-5 h-5 mr-2" />
-                    New Invoice
+                    New Invoice 
                   </button>
                 )}
               </div>

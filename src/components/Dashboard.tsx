@@ -10,6 +10,10 @@ import {
   User,
 
 } from 'lucide-react';
+import { getCurrencySymbol } from '../utils/currency';
+import { useCurrency } from '../context/CurrencyContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux-store';
 
 export default function Dashboard() {
   const { invoices } = useApp();
@@ -77,6 +81,14 @@ export default function Dashboard() {
     });
   };
 
+  
+
+  
+
+
+
+
+
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
@@ -90,6 +102,7 @@ export default function Dashboard() {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Total Revenue</p>
               <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
+              
             </div>
           </div>
           <div className="mt-4 flex items-center text-sm text-green-600">
@@ -146,6 +159,8 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Invoices */}
@@ -218,6 +233,11 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+
+      
+
+
     </div>
   );
 }
